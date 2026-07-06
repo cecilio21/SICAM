@@ -1,0 +1,5 @@
+Modelo,Accuracy,Precision,Recall,F1 Score,Tiempo (s)
+LinearSVC Optimizado,0.8111,0.822,0.8111,0.8136,0.22
+LinearSVC,0.7729,0.7666,0.7729,0.7632,0.18
+Logistic Regression,0.7555,0.7428,0.7555,0.7313,0.57
+Naive Bayes,0.6616,0.6211,0.6616,0.5972,0.08

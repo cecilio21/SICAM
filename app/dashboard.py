@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+from pathlib import Path
 import joblib
 import datetime
 import plotly.express as px
@@ -20,15 +21,37 @@ st.set_page_config(
 # CARGA DE DATOS
 # ==========================
 
+#@st.cache_data
+#def cargar_datos():
+    #return pd.read_csv("data/defunciones_ml.csv")
+
+#df = cargar_datos()
+
+#cie10 = pd.read_csv(
+    #"data/cie-10.csv"
+#)
+
+# ==========================================
+# RUTA BASE DEL PROYECTO
+# ==========================================
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+DATA_DIR = BASE_DIR / "data"
+MODELS_DIR = BASE_DIR / "models"
+
+# ==========================================
+# CARGA DE DATOS
+# ==========================================
+
 @st.cache_data
 def cargar_datos():
-    return pd.read_csv("data/defunciones_ml.csv")
+    return pd.read_csv(DATA_DIR / "defunciones_ml.csv")
 
 df = cargar_datos()
 
-cie10 = pd.read_csv(
-    "data/cie-10.csv"
-)
+cie10 = pd.read_csv(DATA_DIR / "cie-10.csv")
+
 
 #palabras medicas reconocidas
 vocabulario_medico = set()
@@ -55,9 +78,11 @@ for col in [
 # CARGA DEL MODELO
 # ==========================
 
-modelo = joblib.load(
-    "models/modelo_sicam.pkl"
-)
+#modelo = joblib.load(
+    #"models/modelo_sicam.pkl"
+#)
+    modelo = joblib.load(MODELS_DIR / "modelo_sicam.pkl")
+
 
 if "historial" not in st.session_state:
     st.session_state.historial = []

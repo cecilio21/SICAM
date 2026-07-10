@@ -325,12 +325,19 @@ div[data-testid="stMetric"]{
 
     background:white;
 
+    color:black !important;
+
     padding:20px;
 
     border-radius:15px;
 
     box-shadow:0px 2px 8px rgba(0,0,0,0.08);
 }
+
+div[data-testid="stMetric"] *{
+    color:black !important;
+}
+
 
 div[data-testid="stAlert"]{
 

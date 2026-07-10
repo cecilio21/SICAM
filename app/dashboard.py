@@ -229,7 +229,7 @@ div[role="radiogroup"] > label{
 
     text-align:center;
 
-    color:#000000;
+    color:white;
 
     box-shadow:0px 5px 20px rgba(0,0,0,0.3);
 
@@ -348,24 +348,24 @@ div[data-testid="stAlert"]{
    TEXTO DEL CONTENIDO PRINCIPAL
 ========================================== */
 
-/* Todo el contenido principal */
+/* Todo el contenido principal 
 .main *{
     color:#000000 !important;
 }
 
-/* Títulos */
+/* Títulos 
 h1, h2, h3, h4, h5, h6{
     color:#000000 !important;
 }
 
-/* Texto */
+/* Texto *
 p{
     color:#000000 !important;
-}
+}*/
 
 /* Markdown */
 div[data-testid="stMarkdownContainer"] *{
-    color:#000000 !important;
+    color:2B2B2B !important;
 }
 
 </style>

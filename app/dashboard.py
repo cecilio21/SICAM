@@ -229,7 +229,7 @@ div[role="radiogroup"] > label{
 
     text-align:center;
 
-    color:white;
+    color:#000000;
 
     box-shadow:0px 5px 20px rgba(0,0,0,0.3);
 
@@ -342,6 +342,30 @@ div[data-testid="stMetric"] *{
 div[data-testid="stAlert"]{
 
     border-radius:15px;
+}
+
+/* ==========================================
+   TEXTO DEL CONTENIDO PRINCIPAL
+========================================== */
+
+/* Todo el contenido principal */
+.main *{
+    color:#000000 !important;
+}
+
+/* Títulos */
+h1, h2, h3, h4, h5, h6{
+    color:#000000 !important;
+}
+
+/* Texto */
+p{
+    color:#000000 !important;
+}
+
+/* Markdown */
+div[data-testid="stMarkdownContainer"] *{
+    color:#000000 !important;
 }
 
 </style>

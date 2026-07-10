@@ -229,7 +229,7 @@ div[role="radiogroup"] > label{
 
     text-align:center;
 
-    color:white;
+    color:1C1C1C;
 
     box-shadow:0px 5px 20px rgba(0,0,0,0.3);
 
@@ -348,24 +348,38 @@ div[data-testid="stAlert"]{
    TEXTO DEL CONTENIDO PRINCIPAL
 ========================================== */
 
-/* Todo el contenido principal 
+/* Todo el contenido principal */
 .main *{
     color:#000000 !important;
 }
 
-/* Títulos 
+/* Títulos */
 h1, h2, h3, h4, h5, h6{
     color:#000000 !important;
 }
 
-/* Texto *
+/* Texto */
 p{
     color:#000000 !important;
-}*/
+}
 
-/* Markdown */
+/* Markdown 
 div[data-testid="stMarkdownContainer"] *{
-    color:2B2B2B !important;
+    color:#000000 !important;
+}*/
+/* Texto normal */
+div[data-testid="stMarkdownContainer"]{
+    color:#2B2B2B;
+}
+
+/* Hero */
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p,
+.hero div,
+.hero span{
+    color:white !important;
 }
 
 </style>
@@ -421,22 +435,22 @@ menu = st.sidebar.radio(
 if menu == "Inicio":        
 
     st.markdown("""
-        <div class="hero">
+    <div class="hero">
 
-        <h1>SICAM</h1>
+    <h1 style="color:white;">SICAM</h1>
 
-        <h3>
-        Sistema Inteligente para la Clasificación de Mortalidad
-        </h3>
+    <h3 style="color:white;">
+    Sistema Inteligente para la Clasificación de Mortalidad
+    </h3>
 
-        <p>
-        Plataforma desarrollada para la clasificación automática
-        de causas de muerte mediante Procesamiento de Lenguaje
-        Natural y Aprendizaje Automático.
-        </p>
+    <p style="color:white;">
+    Plataforma desarrollada para la clasificación automática
+    de causas de muerte mediante Procesamiento de Lenguaje
+    Natural y Aprendizaje Automático.
+    </p>
 
-        </div>
-    """, unsafe_allow_html=True)
+    </div>
+""", unsafe_allow_html=True)
 
     col1, col2, col3 = st.columns(3)
 

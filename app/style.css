@@ -1,0 +1,190 @@
+/* ==========================================
+   FONDO PRINCIPAL SICAM
+========================================== */
+.stApp {
+    background: linear-gradient(135deg, #EEF5FC, #DDEBFA, #CFE3F8);
+}
+
+/* ==========================================
+   SIDEBAR SICAM
+========================================== */
+section[data-testid="stSidebar"] {
+    background-color: #14243A;
+}
+
+/* Título SICAM */
+.sidebar-title {
+    color: white !important;
+}
+
+/* Todo el texto del sidebar */
+section[data-testid="stSidebar"] * {
+    color: white !important;
+}
+
+/* Opciones del menú */
+div[role="radiogroup"] label {
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    padding-top: 12px !important;
+    padding-bottom: 12px !important;
+    margin-bottom: 4px !important;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+/* Texto de cada opción */
+div[role="radiogroup"] label p {
+    color: white !important;
+    font-size: 16px !important;
+    font-weight: 600 !important;
+    margin: 0 !important;
+}
+
+/* Hover */
+div[role="radiogroup"] label:hover {
+    background-color: #2E4C8C !important;
+    cursor: pointer;
+}
+
+/* Opción seleccionada */
+div[role="radiogroup"] label:has(input:checked) {
+    background-color: #2F4F7F !important;
+    border-left: 4px solid #4FC3F7 !important;
+    padding-left: 12px !important;
+}
+
+/* Ocultar círculo del radio */
+div[role="radiogroup"] > label > div:first-child {
+    display: none !important;
+}
+
+/* Ajustar alineación */
+div[role="radiogroup"] > label {
+    padding-left: 15px !important;
+}
+
+/* Línea azul bajo el encabezado */
+.sidebar-divider {
+    border: 2px solid #4FC3F7;
+    margin-top: 20px;
+}
+
+/* Título principal */
+.sidebar-title {
+    color: white !important;
+    font-size: 52px !important;
+    font-weight: 900 !important;
+    text-align: center;
+}
+
+/* Subtítulo */
+.sidebar-subtitle {
+    color: #D6E4FF !important;
+    text-align: center;
+    font-size: 14px !important;
+}
+
+.hero {
+    background: linear-gradient(135deg, #0f172a, #1e3a8a, #2563eb);
+    padding: 40px;
+    border-radius: 20px;
+    text-align: center;
+    color: white !important;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.3);
+    margin-bottom: 20px;
+}
+
+/* =====================================
+   ARQUITECTURA SICAM
+===================================== */
+.architecture-container {
+    background: linear-gradient(135deg, #0B1E3A, #163B74);
+    padding: 30px;
+    border-radius: 20px;
+    margin-top: 20px;
+    box-shadow: 0px 5px 20px rgba(0,0,0,0.25);
+}
+
+.architecture-title {
+    text-align: center;
+    color: white;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.architecture-subtitle {
+    text-align: center;
+    color: #D6E4FF;
+    margin-bottom: 35px;
+}
+
+.arch-flow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.arch-box {
+    background: #1F4E8C;
+    color: white;
+    padding: 20px;
+    border-radius: 15px;
+    min-width: 180px;
+    text-align: center;
+    font-weight: 600;
+    border: 1px solid #4FC3F7;
+}
+
+.arch-arrow {
+    color: #4FC3F7;
+    font-size: 35px;
+    font-weight: bold;
+}
+
+div[data-testid="stMetric"] {
+    background: white;
+    color: black !important;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0px 2px 8px rgba(0,0,0,0.08);
+}
+
+div[data-testid="stMetric"] * {
+    color: black !important;
+}
+
+div[data-testid="stAlert"] {
+    border-radius: 15px;
+}
+
+/* ==========================================
+   TEXTO DEL CONTENIDO PRINCIPAL
+========================================== */
+.main * {
+    color: #000000 !important;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #000000 !important;
+}
+
+p {
+    color: #000000 !important;
+}
+
+div[data-testid="stMarkdownContainer"] {
+    color: #2B2B2B;
+}
+
+.hero h1,
+.hero h2,
+.hero h3,
+.hero p,
+.hero div,
+.hero span {
+    color: white !important;
+}

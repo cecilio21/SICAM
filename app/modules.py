@@ -14,13 +14,9 @@ def mostrar_inicio(df):
         </div>
         ''', unsafe_allow_html=True)
 
-        # Usar las columnas reales de tu dataset para las métricas del Inicio
-        capitulos_unicos = df["CAPITULO_CIE10"].nunique() if "CAPITULO_CIE10" in df.columns else 0
-        total_registros = len(df)
-
         col1, col2, col3 = st.columns(3)
-        col1.metric("Capítulos CIE-10", capitulos_unicos)
-        col2.metric("Registros Analizados", total_registros)
+        col1.metric("Capítulos CIE-10", df["CAPITULO_CIE10"].nunique())
+        col2.metric("Registros Analizados", len(df))
         col3.metric("Accuracy del Modelo", "81.11 %")
         
         st.markdown("---")
@@ -74,23 +70,20 @@ def mostrar_clasificacion_automatica(modelo, cie10, vocabulario_medico):
             if texto == "":
                 st.warning("Ingrese un diagnóstico médico.")
             else:
-                # Búsqueda flexible en el vocabulario médico compilado de tu dataset
                 palabras = re.findall(r"\b[a-záéíóúñ]+\b", texto.lower())
                 coincidencias = sum(1 for p in palabras if p in vocabulario_medico)
 
                 if coincidencias == 0 and len(vocabulario_medico) > 0:
-                    st.warning("Nota: El diagnóstico contiene palabras no comunes en el historial, procesando de todos modos...")
+                    st.warning("Nota: El diagnóstico contiene palabras no comunes en el historial de entrenamiento.")
                 
-                # Predicción del LinearSVC
                 pred = modelo.predict([texto])
                 codigo_predicho = pred[0]
                 
-                # Buscar la descripción en tu dataset cie-10.csv usando tus columnas 'code' y 'description'
-                descripcion = "Descripción no encontrada en el catálogo CIE-10."
-                if "code" in cie10.columns and "description" in cie10.columns:
-                    capitulo_info = cie10[cie10["code"] == codigo_predicho]
-                    if not capitulo_info.empty:
-                        descripcion = capitulo_info.iloc[0]["description"]
+                capitulo_info = cie10[cie10["code"] == codigo_predicho]
+                if not capitulo_info.empty:
+                    descripcion = capitulo_info.iloc[0]["description"]
+                else:
+                    descripcion = "Descripción no encontrada en el catálogo CIE-10."
                 
                 st.info(f"Descripción Asociada: {descripcion}")
                 
@@ -175,23 +168,20 @@ def mostrar_validacion_modelo(df):
         fig.update_traces(texttemplate="%{text:.2f}%", textposition="outside")
         st.plotly_chart(fig, use_container_width=True)
 
-        # Mostrar gráficos basados en las columnas reales del dataset
-        if "DIAGBAS_CIEDESC" in df.columns:
-            st.markdown("---")
-            st.subheader("Top 10 Diagnósticos Base más Frecuentes en el Dataset")
-            top10 = df["DIAGBAS_CIEDESC"].value_counts().head(10).reset_index()
-            top10.columns = ["Diagnóstico", "Cantidad"]
-            fig_top = px.bar(top10, x="Cantidad", y="Diagnóstico", orientation="h", title="Frecuencia de Diagnósticos")
-            st.plotly_chart(fig_top, use_container_width=True)
+        st.markdown("---")
+        st.subheader("Top 10 Diagnósticos Base más Frecuentes en el Dataset")
+        top10 = df["DIAGBAS_CIEDESC"].value_counts().head(10).reset_index()
+        top10.columns = ["Diagnóstico", "Cantidad"]
+        fig_top = px.bar(top10, x="Cantidad", y="Diagnóstico", orientation="h", title="Frecuencia de Diagnósticos")
+        st.plotly_chart(fig_top, use_container_width=True)
 
-        if "EDAD_ANO" in df.columns:
-            st.markdown("---")
-            st.subheader("Distribución por Grupos de Edad")
-            df["GRUPO_EDAD"] = pd.cut(df["EDAD_ANO"], bins=[0,14,29,44,59,74,120], labels=["0-14", "15-29", "30-44", "45-59", "60-74", "75+"])
-            edad = df["GRUPO_EDAD"].value_counts().sort_index().reset_index()
-            edad.columns = ["Grupo de Edad", "Cantidad"]
-            fig_edad = px.bar(edad, x="Grupo de Edad", y="Cantidad", title="Casos por Rangos de Edad")
-            st.plotly_chart(fig_edad, use_container_width=True)
+        st.markdown("---")
+        st.subheader("Distribución por Grupos de Edad")
+        df["GRUPO_EDAD"] = pd.cut(df["EDAD_ANO"], bins=[0,14,29,44,59,74,120], labels=["0-14", "15-29", "30-44", "45-59", "60-74", "75+"])
+        edad = df["GRUPO_EDAD"].value_counts().sort_index().reset_index()
+        edad.columns = ["Grupo de Edad", "Cantidad"]
+        fig_edad = px.bar(edad, x="Grupo de Edad", y="Cantidad", title="Casos por Rangos de Edad")
+        st.plotly_chart(fig_edad, use_container_width=True)
 
     except Exception as e:
         st.error(f"Error en la Validación del Modelo: {str(e)}")
@@ -203,24 +193,20 @@ def mostrar_dashboard_epidemiologico(df):
         
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Registros", len(df))
-        if "EDAD_ANO" in df.columns:
-            col2.metric("Edad Promedio", round(df["EDAD_ANO"].mean(), 1))
-        if "CAPITULO_CIE10" in df.columns:
-            col3.metric("Capítulos CIE-10 Detectados", df["CAPITULO_CIE10"].nunique())
+        col2.metric("Edad Promedio", round(df["EDAD_ANO"].mean(), 1))
+        col3.metric("Capítulos CIE-10 Detectados", df["CAPITULO_CIE10"].nunique())
 
-        if "CAPITULO_CIE10" in df.columns:
-            st.subheader("Distribución de Defunciones por Capítulos CIE-10")
-            top_cap = df["CAPITULO_CIE10"].value_counts().head(10).reset_index()
-            top_cap.columns = ["Capítulo", "Cantidad"]
-            fig_cap = px.bar(top_cap, x="Cantidad", y="Capítulo", orientation="h")
-            st.plotly_chart(fig_cap, use_container_width=True)
+        st.subheader("Distribución de Defunciones por Capítulos CIE-10")
+        top_cap = df["CAPITULO_CIE10"].value_counts().head(10).reset_index()
+        top_cap.columns = ["Capítulo", "Cantidad"]
+        fig_cap = px.bar(top_cap, x="Cantidad", y="Capítulo", orientation="h")
+        st.plotly_chart(fig_cap, use_container_width=True)
 
-        if "SEXO" in df.columns:
-            st.subheader("Distribución por Sexo")
-            sexo_df = df["SEXO"].value_counts().reset_index()
-            sexo_df.columns = ["Sexo", "Cantidad"]
-            fig_sexo = px.pie(sexo_df, values="Cantidad", names="Sexo", hole=0.4)
-            st.plotly_chart(fig_sexo, use_container_width=True)
+        st.subheader("Distribución por Sexo")
+        sexo_df = df["SEXO"].value_counts().reset_index()
+        sexo_df.columns = ["Sexo", "Cantidad"]
+        fig_sexo = px.pie(sexo_df, values="Cantidad", names="Sexo", hole=0.4)
+        st.plotly_chart(fig_sexo, use_container_width=True)
             
     except Exception as e:
         st.error(f"Error en el Dashboard Epidemiológico: {str(e)}")
@@ -229,13 +215,10 @@ def mostrar_analitica_avanzada(df):
     try:
         st.title("Analítica Avanzada")
         
-        if "SEXO" in df.columns and "CAPITULO_CIE10" in df.columns:
-            st.subheader("Relación Cruzada: Capítulos CIE-10 por Sexo")
-            sexo_capitulo = pd.crosstab(df["SEXO"], df["CAPITULO_CIE10"])
-            fig = px.imshow(sexo_capitulo, aspect="auto", title="Matriz de Densidad de Diagnósticos")
-            st.plotly_chart(fig, use_container_width=True)
-        else:
-            st.info("Las columnas SEXO y CAPITULO_CIE10 son necesarias para desplegar la analítica avanzada.")
+        st.subheader("Relación Cruzada: Capítulos CIE-10 por Sexo")
+        sexo_capitulo = pd.crosstab(df["SEXO"], df["CAPITULO_CIE10"])
+        fig = px.imshow(sexo_capitulo, aspect="auto", title="Matriz de Densidad de Diagnósticos")
+        st.plotly_chart(fig, use_container_width=True)
     except Exception as e:
         st.error(f"Error en Analítica Avanzada: {str(e)}")
 

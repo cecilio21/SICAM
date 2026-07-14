@@ -23,75 +23,45 @@ st.set_page_config(
 )
 
 # Definir rutas según la arquitectura de tu proyecto
-BASE_DIR = Path(__file__).resolve().parent
+BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 MODELS_DIR = BASE_DIR / "models"
 
-# Inyectar estilos CSS personalizados
+# ==========================================
+# INYECCIÓN DE ESTILOS CSS (Carga Estricta)
+# ==========================================
 try:
-    with open(BASE_DIR / "style.css", "r", encoding="utf-8") as f:
+    # Fuerza la búsqueda estrictamente en la carpeta del archivo actual (app/)
+    ruta_css = Path(__file__).resolve().parent / "style.css"
+    with open(ruta_css, "r", encoding="utf-8") as f:
         st.markdown(f"<style>{f.read()}</style>", unsafe_allow_html=True)
-except Exception:
-    pass
+except Exception as e:
+    st.sidebar.error(f"Error al cargar style.css desde la carpeta app: {str(e)}")
 
-# Carga segura del Dataset de Defunciones (defunciones_ml.csv)
+# Carga estricta de Datasets
 @st.cache_data
 def cargar_datos_defunciones():
-    ruta_dataset = DATA_DIR / "defunciones_ml.csv"
-    try:
-        return pd.read_csv(ruta_dataset)
-    except Exception:
-        # SIMULACIÓN ESTRUCTURAL EXACTA si no encuentra el archivo físico en el servidor
-        return pd.DataFrame({
-            "CAPITULO_CIE10": ["Capítulo I", "Capítulo II", "Capítulo IX", "Capítulo IX", "Capítulo I"],
-            "DIAGBAS_CIEDESC": ["Infarto agudo del miocardio", "Tumor maligno del estómago", "Hipertensión esencial", "Infarto agudo", "Infección bacteriana"],
-            "EDAD_ANO": [65, 42, 78, 71, 55],
-            "SEXO": ["M", "F", "M", "M", "F"]
-        })
+    return pd.read_csv(DATA_DIR / "defunciones_ml.csv")
 
-# Carga segura del Catálogo CIE-10 (cie-10.csv)
 @st.cache_data
 def cargar_catalogo_cie10():
-    ruta_cie10 = DATA_DIR / "cie-10.csv"
-    try:
-        return pd.read_csv(ruta_cie10)
-    except Exception:
-        # SIMULACIÓN ESTRUCTURAL EXACTA de las columnas 'code' y 'description'
-        return pd.DataFrame({
-            "code": ["I21", "C16", "I10"],
-            "description": ["Infarto agudo del miocardio", "Tumor maligno del estómago", "Hipertensión esencial (primaria)"]
-        })
+    return pd.read_csv(DATA_DIR / "cie-10.csv")
 
-# Cargar dataframes globales
+# Inicialización de fuentes de datos globales
 df = cargar_datos_defunciones()
 cie10 = cargar_catalogo_cie10()
 
-# Compilar vocabulario médico dinámico para el autocompletado/validación del clasificador
+# Compilar vocabulario médico extraído del conjunto real
 vocabulario_medico = set()
-if "DIAGBAS_CIEDESC" in df.columns:
-    textos_limpios = df["DIAGBAS_CIEDESC"].dropna().astype(str)
-    for texto in textos_limpios:
-        palabras = re.findall(r"\b[a-záéíóúñ]+\b", texto.lower())
-        vocabulario_medico.update(palabras)
+textos_limpios = df["DIAGBAS_CIEDESC"].dropna().astype(str)
+for texto in textos_limpios:
+    palabras = re.findall(r"\b[a-záéíóúñ]+\b", texto.lower())
+    vocabulario_medico.update(palabras)
 
-# Carga segura de tu modelo entrenado LinearSVC (modelo_sicam.pkl)
-class ModeloRespaldoLinearSVC:
-    """Clase dummy que simula el método predict del LinearSVC original si el .pkl no está disponible."""
-    def predict(self, X):
-        texto = str(X[0]).lower()
-        if "infarto" in texto or "miocardio" in texto:
-            return ["I21"]
-        elif "tumor" in texto or "cáncer" in texto:
-            return ["C16"]
-        else:
-            return ["I10"]
+# Carga estricta de tu modelo LinearSVC binario/multiclase pkl
+modelo = joblib.load(MODELS_DIR / "modelo_sicam.pkl")
 
-try:
-    modelo = joblib.load(MODELS_DIR / "modelo_sicam.pkl")
-except Exception:
-    modelo = ModeloRespaldoLinearSVC()
-
-# Mantener el historial de consultas activo en la sesión del usuario
+# Mantener el historial de consultas activo en la sesión
 if "historial" not in st.session_state:
     st.session_state.historial = []
 
@@ -119,7 +89,7 @@ menu = st.sidebar.radio(
     ]
 )
 
-# Orquestador de vistas
+# Orquestador de vistas modulares
 if menu == "Inicio":
     mostrar_inicio(df)
 elif menu == "Clasificación Automática":
